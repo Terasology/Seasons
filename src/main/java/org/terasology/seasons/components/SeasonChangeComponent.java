@@ -15,6 +15,8 @@
  */
 package org.terasology.seasons.components;
 
+import org.terasology.entitySystem.Component;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Linus
@@ -22,5 +24,5 @@ package org.terasology.seasons.components;
  * Time: 10:36 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SeasonChangeComponent {
+public class SeasonChangeComponent implements Component {
 }
