@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.seasons.components;
+package org.terasology.seasons.events;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.event.Event;
+import org.terasology.seasons.Season;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Linus
  * Date: 10/30/13
- * Time: 9:43 AM
+ * Time: 10:37 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DayChangeComponent implements Component {
+public class OnSeasonChangeEvent implements Event {
+
+    public OnSeasonChangeEvent(Season from, Season to)
+    {
+        this.from = from;
+        this.to = to;
+    }
+
+    public final Season from;
+    public final Season to;
 }

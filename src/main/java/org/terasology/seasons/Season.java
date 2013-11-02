@@ -15,6 +15,9 @@
  */
 package org.terasology.seasons;
 
+import org.terasology.world.time.WorldTime;
+import org.terasology.world.time.WorldTimeImpl;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Linus
@@ -72,7 +75,7 @@ public enum Season {
 
     public static Season onDay(double day)
     {
-        return onDay((int) Math.floor(day));
+        return onDay((int) Math.floor(day - FIRST_DAY_START));
     }
 
     public static Season onDay(int day)
@@ -90,7 +93,7 @@ public enum Season {
 
     public static int dayOfCycle(double day)
     {
-        return dayOfCycle((int)Math.floor(day));
+        return dayOfCycle((int)Math.floor(day - FIRST_DAY_START));
     }
 
     public static int dayOfCycle(int day)
@@ -100,7 +103,7 @@ public enum Season {
 
     public static int dayOfSeason(double day)
     {
-        return dayOfSeason((int)Math.floor(day));
+        return dayOfSeason((int)Math.floor(day - FIRST_DAY_START));
     }
 
     public static int dayOfSeason(int day)
@@ -130,4 +133,6 @@ public enum Season {
     private final String DISPLAY_NAME;
     private final int LENGTH_IN_DAYS;
     private int FIRST_DAY;
+
+    public final static double FIRST_DAY_START = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
 }
