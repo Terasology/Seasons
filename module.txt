@@ -3,6 +3,6 @@
     "version" : "0.9.0",
     "displayName" : "Seasons",
     "author" : "DizzyDragon",
-    "description" : "A library module that adds seasons to terasology. Other modules can use to easily adjust their behaviour to the seasons.",
+    "description" : "A library module that adds seasons to Terasology. Other modules can use to easily adjust their behaviour to the seasons.",
     "dependencies" : []
 }

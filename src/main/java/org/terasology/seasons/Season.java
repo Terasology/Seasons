@@ -51,22 +51,38 @@ public enum Season {
         }
     }
 
+    /**
+     * The length of the season in days
+     * @return The length of the season in days
+     */
     public int lengthInDays()
     {
         return LENGTH_IN_DAYS;
     }
 
+    /**
+     * The name of the season
+     * @return The name of the season
+     */
     public String displayName()
     {
         return DISPLAY_NAME;
     }
 
+    /**
+     * Returns the season that follows the season on which the function is called.
+     * @return The following season
+     */
     public Season next()
     {
         Season[] seasons = Season.values();
         return seasons[(this.ordinal() + 1) % seasons.length];
     }
 
+    /**
+     * Returns the season that precedes the season on which the function is called.
+     * @return The preceding season
+     */
     public Season previous()
     {
         Season[] seasons = Season.values();
@@ -75,12 +91,12 @@ public enum Season {
 
     public static Season onDay(double day)
     {
-        return onDay((int) Math.floor(day - FIRST_DAY_START));
+        return onDay((int) Math.floor(day));
     }
 
     public static Season onDay(int day)
     {
-        day = ((day % CYCLE_LENGTH_IN_DAYS) + CYCLE_LENGTH_IN_DAYS) % CYCLE_LENGTH_IN_DAYS;
+        day = ((day % YEAR_LENGTH_IN_DAYS) + YEAR_LENGTH_IN_DAYS) % YEAR_LENGTH_IN_DAYS;
 
         for(Season season: values())
         {
@@ -93,46 +109,63 @@ public enum Season {
 
     public static int dayOfCycle(double day)
     {
-        return dayOfCycle((int)Math.floor(day - FIRST_DAY_START));
+        return dayOfCycle((int)Math.floor(day - FIRST_CYCLE_START));
     }
 
     public static int dayOfCycle(int day)
     {
-        return ((day % CYCLE_LENGTH_IN_DAYS) + CYCLE_LENGTH_IN_DAYS) % CYCLE_LENGTH_IN_DAYS;
+        return ((day % YEAR_LENGTH_IN_DAYS) + YEAR_LENGTH_IN_DAYS) % YEAR_LENGTH_IN_DAYS;
     }
+
 
     public static int dayOfSeason(double day)
     {
-        return dayOfSeason((int)Math.floor(day - FIRST_DAY_START));
+        return dayOfSeason((int)Math.floor(day));
     }
 
+    /**
+     * Returns how many days you are into a season at a particular day (of the cycle).
+     * @param day The day (since the start of the first cycle)
+     * @return How many days you are into a season at the given day.
+     */
     public static int dayOfSeason(int day)
     {
         day = dayOfCycle(day);
         return day - onDay(day).firstDay();
     }
 
+    /**
+     * Returns the day of the cycle that marks the first day of the season.
+     * @return The day of the cycle that marks the first day of the season.
+     */
     public int firstDay()
     {
         return FIRST_DAY;
     }
 
+    /**
+     * Returns the day of the cycle that marks the last day of the season.
+     * @return The day of the cycle that marks the last day of the season.
+     */
     public int lastDay()
     {
        return FIRST_DAY + LENGTH_IN_DAYS - 1;
     }
 
-    public final static int CYCLE_LENGTH_IN_DAYS;
+    /**
+     * The amount of days of all seasons combined.
+     */
+    public final static int YEAR_LENGTH_IN_DAYS;
     static
     {
         Season[] seasons = values();
         Season lastSeason = seasons[seasons.length - 1];
-        CYCLE_LENGTH_IN_DAYS = lastSeason.lastDay() + 1;
+        YEAR_LENGTH_IN_DAYS = lastSeason.lastDay() + 1;
     }
+
+    public final static double FIRST_CYCLE_START = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
 
     private final String DISPLAY_NAME;
     private final int LENGTH_IN_DAYS;
     private int FIRST_DAY;
-
-    public final static double FIRST_DAY_START = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
 }
