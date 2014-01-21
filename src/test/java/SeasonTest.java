@@ -26,11 +26,13 @@ import static org.junit.Assert.assertTrue;
  */
 
 /**
- * Created with IntelliJ IDEA.
- * User: Linus
- * Date: 1/19/14
- * Time: 1:08 PM
- * To change this template use File | Settings | File Templates.
+ * @author DizzyDragon
+ * Test of Season
+ * @version 1.0
+ *
+ * Coverage of Season class:
+ *  Methods: 100%
+ *  Lines:    94% (Missed lines are unreachable)
  */
 public class SeasonTest {
     private static Random random = new Random(768179104);
@@ -38,10 +40,10 @@ public class SeasonTest {
     // domains ///////////////////////////////////////////////////////////////
 
     private static EnumDomain
-            seasons = new EnumDomain(Season.class);
+            seasons = new EnumDomain<>(Season.class);
 
     private static Domain
-            integers = new Domain(Integer.class) {
+            integers = new Domain<Integer>(Integer.class) {
                 @Override
                 public Iterable<Integer> generateUniversalSamples() {
                     Integer[] a = {0, 1, -1, random.nextInt(90000) + 10000, -(random.nextInt(90000)) - 10000};
@@ -50,13 +52,13 @@ public class SeasonTest {
                 }
             },
             years = integers,
-            daysInYear = new Domain(Integer.class) {
+            daysInYear = new Domain<Integer>(Integer.class) {
                 @Override
                 public Iterable<Integer> generateUniversalSamples() {
                     return new Iterable<Integer>() {
                         @Override
                         public Iterator<Integer> iterator() {
-                            return new Iterator() {
+                            return new Iterator<Integer>() {
                                 private int counter = 0;
 
                                 @Override
@@ -72,10 +74,10 @@ public class SeasonTest {
 
                                 @Override
                                 public void remove() {
-                                    //counter++;
+                                    throw new RuntimeException("Not implemented");
                                 }
                             };
-                        };
+                        }
                     };
                 }
             };
@@ -173,7 +175,7 @@ public class SeasonTest {
                 HashSet<String> names = new HashSet<>();
 
                 for(Season season: Season.values()) {
-                    names.add(season.name());
+                    names.add(season.displayName());
                 }
 
                 assertEquals("Number of unique names", names.size(), Season.values().length);
@@ -197,8 +199,6 @@ public class SeasonTest {
         firstAndLastDayNumberArePositive = new InstanceRule<Season>() {
             @Override
             public void test(Season season) {
-                int computedLength = Math.abs(season.lastDay() - season.firstDay()) + 1;
-
                 assertTrue(
                         String.format("First day of %s is positive number", season.toString()),
                         season.firstDay() >= 0
@@ -217,7 +217,9 @@ public class SeasonTest {
             public void test(Integer day, Integer year) {
                 int absoluteDay = day + year * Season.YEAR_LENGTH_IN_DAYS;
                 int expected  = ((absoluteDay % Season.YEAR_LENGTH_IN_DAYS) + Season.YEAR_LENGTH_IN_DAYS) % Season.YEAR_LENGTH_IN_DAYS;
+                double absoluteDayD = absoluteDay + random.nextDouble();
                 assertEquals("Day of year", expected , Season.dayOfCycle(absoluteDay));
+                assertEquals("Day of year", expected , Season.dayOfYear(absoluteDayD));
             }
         },
 
@@ -270,8 +272,8 @@ public class SeasonTest {
                 );
 
                 assertSame(
-                        String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString()),
-                        leftOperand.next(), rightOperand
+                        String.format("%s is preceded by %s", rightOperand.toString(), leftOperand.toString()),
+                        rightOperand.previous(), leftOperand
                 );
             }
         };

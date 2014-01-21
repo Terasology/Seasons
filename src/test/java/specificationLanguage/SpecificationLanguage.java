@@ -1,4 +1,5 @@
-package specificationLanguage;/*
+package specificationLanguage;
+/*
  * Copyright 2014 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +15,14 @@ package specificationLanguage;/*
  * limitations under the License.
  */
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Annotated;
-
 import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNoException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Linus
- * Date: 1/20/14
- * Time: 11:50 AM
- *
- * Simple, lightweight specification Language embedded in JUnit.
+ * @author DizzyDragon
+ * Simple, lightweight specification language embedded in JUnit.
  */
 public class SpecificationLanguage {
 

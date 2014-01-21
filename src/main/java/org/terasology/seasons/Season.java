@@ -19,26 +19,27 @@ import org.terasology.world.time.WorldTime;
 import org.terasology.world.time.WorldTimeImpl;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Linus
- * Date: 10/29/13
- * Time: 5:43 PM
- * To change this template use File | Settings | File Templates.
+ * @author DizzyDragon.
+ * Enumeration of the seasons.
+ * @version 1.0
  */
+@SuppressWarnings("unused")
 public enum Season {
     SPRING("spring", 6),
     SUMMER("summer", 6),
     FALL("fall", 6),
     WINTER("winter", 6);
 
+
     private Season(String name, int lengthInDays)
     {
         if(lengthInDays < 0)
-            lengthInDays = 0;
+            throw new IllegalArgumentException("Length of a season must be >= 0");
 
         DISPLAY_NAME = name;
         LENGTH_IN_DAYS = lengthInDays;
     }
+
 
     static
     {
@@ -89,11 +90,21 @@ public enum Season {
         return seasons[(this.ordinal() + seasons.length - 1) % seasons.length];
     }
 
+    /**
+     * Returns the season on a particular day
+     * @param day absolute day (+ time)
+     * @return The season on that particular day
+     */
     public static Season onDay(double day)
     {
         return onDay((int) Math.floor(day));
     }
 
+    /**
+     * Returns the season on a particular day
+     * @param day absolute day
+     * @return The season on that particular day
+     */
     public static Season onDay(int day)
     {
         day = ((day % YEAR_LENGTH_IN_DAYS) + YEAR_LENGTH_IN_DAYS) % YEAR_LENGTH_IN_DAYS;
@@ -107,17 +118,31 @@ public enum Season {
         return null;  //unreachable code;
     }
 
-    public static int dayOfCycle(double day)
+    /**
+     * Converts an absolute day to day of the year
+     * @param day absolute day (+ time)
+     * @return The corresponding day of the year
+     */
+    public static int dayOfYear(double day)
     {
-        return dayOfCycle((int)Math.floor(day - FIRST_CYCLE_START));
+        return dayOfCycle((int)Math.floor(day));
     }
 
+    /**
+     * Converts an absolute day to day of the year
+     * @param day absolute day (+ time)
+     * @return The corresponding day of the year
+     */
     public static int dayOfCycle(int day)
     {
         return ((day % YEAR_LENGTH_IN_DAYS) + YEAR_LENGTH_IN_DAYS) % YEAR_LENGTH_IN_DAYS;
     }
 
-
+    /**
+     * Returns how many days you are into a season at a particular day (of the cycle).
+     * @param day The day (+ time) (since the start of the first cycle)
+     * @return How many days you are into a season at the given day.
+     */
     public static int dayOfSeason(double day)
     {
         return dayOfSeason((int)Math.floor(day));
@@ -163,7 +188,10 @@ public enum Season {
         YEAR_LENGTH_IN_DAYS = lastSeason.lastDay() + 1;
     }
 
-    public final static double FIRST_CYCLE_START = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
+    /**
+     * Constant that needs to be added to the world time to get the season time.
+     */
+    public final static double WORLD_TIME_OFFSET = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
 
     private final String DISPLAY_NAME;
     private final int LENGTH_IN_DAYS;
