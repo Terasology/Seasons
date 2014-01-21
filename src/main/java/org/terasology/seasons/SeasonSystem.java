@@ -60,7 +60,7 @@ public class SeasonSystem implements ComponentSystem {
         Season s = Season.onDay(currentDay);
         int d = Season.dayOfSeason(currentDay);
 
-        logger.info(String.format("%s day of %s", OrdinalIndicator.addTo(d), s.displayName()));
+        logger.info(String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName()));
 
         if(seasonChanged())
             broadcastSeasonChangeEvent();

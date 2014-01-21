@@ -16,14 +16,20 @@
 package org.terasology.seasons;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Linus
- * Date: 10/29/13
- * Time: 5:28 PM
- * To change this template use File | Settings | File Templates.
+ * @author DizzyDragon
+ * Contains functions to get the ordinal indicator string for an integer.
  */
 public final class OrdinalIndicator {
-    static String of(int x) {
+    /**
+     * Returns the ordinal indicator of an integer.
+     *
+     * Most readable when called with class name:
+     *  OrdinalIndicator.of(22) -> "nd"
+     *
+     * @param x the integer
+     * @return The ordinal indicator ("st", "nd", "rd" or "th").
+     */
+    public static String of(int x) {
         x = Math.abs(x);
         x %= 100;
 
@@ -50,7 +56,16 @@ public final class OrdinalIndicator {
         }
     }
 
-    static String addTo(int x) {
+    /**
+     * Returns the integer combined with it's ordinal indicator as String.
+     *
+     * Most readable when called with class name:
+     *  OrdinalIndicator.addedTo(22) -> "22nd"
+     *
+     * @param x the integer
+     * @return The integer with it's ordinal indicator attached.
+     */
+    public static String addedTo(int x) {
         return String.format("%d%s", x, OrdinalIndicator.of(x));
     }
 }
