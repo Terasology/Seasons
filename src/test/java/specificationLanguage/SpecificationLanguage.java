@@ -20,6 +20,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNoException;
 
+
 /**
  * @author DizzyDragon
  * Simple, lightweight specification language embedded in JUnit.
@@ -28,7 +29,6 @@ public class SpecificationLanguage {
 
     //////////////////////////////////////
     // Domain types
-
     public static abstract class Domain<T>
     {
         final protected Class<T> underlyingClass;

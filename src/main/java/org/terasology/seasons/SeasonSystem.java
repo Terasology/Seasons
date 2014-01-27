@@ -25,6 +25,7 @@ import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
 import org.terasology.world.time.OnMidnightEvent;
 import org.terasology.world.time.WorldTime;
+import org.terasology.utilities.OrdinalIndicator;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class SeasonSystem implements ComponentSystem {
@@ -44,6 +45,9 @@ public class SeasonSystem implements ComponentSystem {
 	public void initialise() {
         worldTime = world.getTime();
         lastDay = currentDay = worldTime.getDays();
+
+        //UIWindow window = new UIWindow();
+        //window.open();
 	}
 
 	@Override
@@ -75,4 +79,6 @@ public class SeasonSystem implements ComponentSystem {
     {
         OnSeasonChangeEvent event = new OnSeasonChangeEvent(Season.onDay(lastDay), Season.onDay(currentDay));
     }
+
+
 }
