@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.registry.In;
 import org.terasology.entitySystem.systems.*;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
@@ -45,9 +46,6 @@ public class SeasonSystem implements ComponentSystem {
 	public void initialise() {
         worldTime = world.getTime();
         lastDay = currentDay = worldTime.getDays();
-
-        //UIWindow window = new UIWindow();
-        //window.open();
 	}
 
 	@Override
@@ -78,7 +76,10 @@ public class SeasonSystem implements ComponentSystem {
     private void broadcastSeasonChangeEvent()
     {
         OnSeasonChangeEvent event = new OnSeasonChangeEvent(Season.onDay(lastDay), Season.onDay(currentDay));
+        getWorldEntity().send(event);
     }
 
-
+    private EntityRef getWorldEntity() {
+        return entityManager.getEntitiesWith(WorldComponent.class).iterator().next();
+    }
 }
