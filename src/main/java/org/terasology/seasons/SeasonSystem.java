@@ -29,7 +29,7 @@ import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
-public class SeasonSystem implements ComponentSystem {
+public class SeasonSystem extends BaseComponentSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
 
