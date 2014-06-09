@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 MovingBlocks
+ * Copyright 2014 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,21 @@ import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
+import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
-import org.terasology.entitySystem.systems.*;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
 import org.terasology.world.time.OnMidnightEvent;
 import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
 
+/**
+ * Handles the passing of seasons.
+ *
+ * @author DizzyDragon.
+ */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class SeasonSystem extends BaseComponentSystem {
 
@@ -40,17 +47,21 @@ public class SeasonSystem extends BaseComponentSystem {
     private org.terasology.world.WorldProvider world;
 
     private WorldTime worldTime;
-    private double lastDay, currentDay;
+    private double lastDay;
+    private double currentDay;
 
 	@Override
 	public void initialise() {
         worldTime = world.getTime();
-        lastDay = currentDay = worldTime.getDays();
+        lastDay = worldTime.getDays();
+        currentDay = worldTime.getDays();
+        logger.info("Initializing SeasonSystem - {} {} {}", worldTime, lastDay, currentDay);
 	}
 
 	@Override
 	public void shutdown() {
-        lastDay = currentDay = 0.0;
+        lastDay = 0.0;
+        currentDay = 0.0;
         worldTime = null;
 	}
 
@@ -64,17 +75,16 @@ public class SeasonSystem extends BaseComponentSystem {
 
         logger.info(String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName()));
 
-        if(seasonChanged())
+        if (seasonChanged()) {
             broadcastSeasonChangeEvent();
+        }
     }
 
-    private boolean seasonChanged()
-    {
+    private boolean seasonChanged() {
         return Season.onDay(lastDay) != Season.onDay(currentDay);
     }
 
-    private void broadcastSeasonChangeEvent()
-    {
+    private void broadcastSeasonChangeEvent() {
         OnSeasonChangeEvent event = new OnSeasonChangeEvent(Season.onDay(lastDay), Season.onDay(currentDay));
         getWorldEntity().send(event);
     }
