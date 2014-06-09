@@ -19,20 +19,17 @@ import org.terasology.entitySystem.event.Event;
 import org.terasology.seasons.Season;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Linus
- * Date: 10/30/13
- * Time: 10:37 AM
- * To change this template use File | Settings | File Templates.
+ * Event to trigger when the season changes.
+ *
+ * @author DizzyDragon.
  */
 public class OnSeasonChangeEvent implements Event {
 
-    public OnSeasonChangeEvent(Season from, Season to)
-    {
+    public final Season from;
+    public final Season to;
+
+    public OnSeasonChangeEvent(Season from, Season to) {
         this.from = from;
         this.to = to;
     }
-
-    public final Season from;
-    public final Season to;
 }

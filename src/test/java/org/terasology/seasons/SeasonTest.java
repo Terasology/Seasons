@@ -34,7 +34,6 @@ import static org.terasology.specificationLanguage.SpecificationLanguage.*;
 public class SeasonTest {
     private static final UniversalRule THERE_ARE_EXACTLY_4_SEASONS = new UniversalRule() {
         @Override
-        @Test
         public void test() {
             assertEquals("Number of seasons", 4, Season.values().length
             );
@@ -44,7 +43,6 @@ public class SeasonTest {
     // domains ///////////////////////////////////////////////////////////////
     private static final UniversalRule DAYS_IN_A_YEAR_IS_THE_SUM_OF_THE_DAYS_OF_ALL_SEASONS = new UniversalRule() {
         @Override
-        @Test
         public void test() {
             int dayCount = 0;
 
@@ -60,7 +58,6 @@ public class SeasonTest {
     };
     private static final UniversalRule DISPLAY_NAMES_ARE_UNIQUE = new UniversalRule() {
         @Override
-        @Test
         public void test() {
             HashSet<String> names = new HashSet<>();
 
@@ -73,7 +70,6 @@ public class SeasonTest {
     };
     private static final InstanceRule LENGTH_IS_CONSISTENT_WITH_FIRST_AND_LAST_DAY = new InstanceRule<Season>() {
         @Override
-        @Test
         public void test(Season season) {
             int computedLength = Math.abs(season.lastDay() - season.firstDay()) + 1;
 
@@ -85,7 +81,6 @@ public class SeasonTest {
     };
     private static final InstanceRule FIRST_AND_LAST_DAY_NUMBER_ARE_POSITIVE = new InstanceRule<Season>() {
         @Override
-        @Test
         public void test(Season season) {
             assertTrue(
                     String.format("First day of %s is positive number", season.toString()),
@@ -100,7 +95,6 @@ public class SeasonTest {
     };
     private static final TwoInstanceRule DAY_OF_CYCLE_IS_INDEPENDENT_OF_YEAR = new TwoInstanceRule<Integer, Integer>() {
         @Override
-        @Test
         public void test(Integer day, Integer year) {
             int absoluteDay = day + year * Season.YEAR_LENGTH_IN_DAYS;
             int expected = ((absoluteDay % Season.YEAR_LENGTH_IN_DAYS) + Season.YEAR_LENGTH_IN_DAYS) % Season.YEAR_LENGTH_IN_DAYS;
@@ -113,13 +107,11 @@ public class SeasonTest {
     // test cases ////////////////////////////////////////////////////////////
     private static final TwoInstanceRule DAY_TO_SEASON_IS_CONSISTENT = new TwoInstanceRule<Season, Integer>() {
         @Override
-        @Test
         public void test(final Season season, final Integer year) {
             final int firstDayOfYear = year * (Season.YEAR_LENGTH_IN_DAYS);
 
             testForAll(daysIn(season), new InstanceRule<Integer>() {
                 @Override
-                @Test
                 public void test(Integer dayOfSeason) {
                     int absoluteDayI = firstDayOfYear + dayOfSeason;
                     double offset = random.nextDouble();
@@ -133,13 +125,11 @@ public class SeasonTest {
     };
     private static final TwoInstanceRule DAY_OF_SEASON_IS_CONSISTENT = new TwoInstanceRule<Season, Integer>() {
         @Override
-        @Test
         public void test(final Season season, final Integer year) {
             final int firstDayOfYear = year * Season.YEAR_LENGTH_IN_DAYS;
 
             testForAll(daysIn(season), new InstanceRule<Integer>() {
                 @Override
-                @Test
                 public void test(Integer dayOfYear) {
                     int absoluteDayInt = dayOfYear + firstDayOfYear;
                     int dayOfSeason = dayOfYear - season.firstDay();
@@ -154,7 +144,6 @@ public class SeasonTest {
     };
     private static final InfixRelationRule IS_FOLLOWED_BY = new InfixRelationRule<Season, Season>() {
         @Override
-        @Test
         public void test(Season leftOperand, Season rightOperand) {
             assertSame(
                     String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString()),
