@@ -50,20 +50,20 @@ public class SeasonSystem extends BaseComponentSystem {
     private double lastDay;
     private double currentDay;
 
-	@Override
-	public void initialise() {
+    @Override
+    public void initialise() {
         worldTime = world.getTime();
         lastDay = worldTime.getDays();
         currentDay = worldTime.getDays();
         logger.info("Initializing SeasonSystem - {} {} {}", worldTime, lastDay, currentDay);
-	}
+    }
 
-	@Override
-	public void shutdown() {
+    @Override
+    public void shutdown() {
         lastDay = 0.0;
         currentDay = 0.0;
         worldTime = null;
-	}
+    }
 
     @ReceiveEvent(components = WorldComponent.class)
     public void onMidnight(OnMidnightEvent event, EntityRef entity) {
