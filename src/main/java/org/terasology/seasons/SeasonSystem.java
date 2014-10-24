@@ -40,7 +40,7 @@ import org.terasology.utilities.OrdinalIndicator;
  *
  * @author DizzyDragon.
  */
-@RegisterSystem(RegisterMode.AUTHORITY)
+@RegisterSystem
 public class SeasonSystem extends BaseComponentSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
@@ -129,6 +129,14 @@ public class SeasonSystem extends BaseComponentSystem {
         if (seasonChanged()) {
             broadcastSeasonChangeEvent();
         }
+    }
+
+    public String getSeasonDayDescription() {
+        float days = worldTime.getDays();
+        Season s = Season.onDay(days);
+        int d = Season.dayOfSeason(days);
+
+        return String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName());
     }
 
     private float getTemperature(float baseValue) {
