@@ -76,7 +76,7 @@ public class SeasonSystem extends BaseComponentSystem {
                 @Override
                 public Float apply(Float timeInYear) {
                     // Humidity peaks in the middle of spring and fall, bottoms in the middle of summer and winter
-                    double x = Math.PI * (2 * timeInYear * 2 + 0.25f);
+                    double x = Math.PI * (2 * timeInYear * 2 + 0.5f);
                     return yearlyHumidityAmplitude / 2f * (float) Math.sin(x);
                 }
             };
