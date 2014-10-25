@@ -28,12 +28,14 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.math.TeraMath;
 import org.terasology.registry.In;
+import org.terasology.registry.Share;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.time.OnMidnightEvent;
 import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
+import org.terasology.world.time.WorldTimeImpl;
 
 /**
  * Handles the passing of seasons.
@@ -41,9 +43,10 @@ import org.terasology.utilities.OrdinalIndicator;
  * @author DizzyDragon.
  */
 @RegisterSystem
+@Share(value = SeasonSystem.class)
 public class SeasonSystem extends BaseComponentSystem {
-
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
+    private static final float TIME_SHIFT = WorldTimeImpl.MIDDAY_TIME * WorldTimeImpl.MS_TO_DAYS;
 
     @In
     private EntityManager entityManager;
@@ -132,21 +135,21 @@ public class SeasonSystem extends BaseComponentSystem {
     }
 
     public String getSeasonDayDescription() {
-        float days = worldTime.getDays();
+        float days = worldTime.getDays() + TIME_SHIFT;
         Season s = Season.onDay(days);
         int d = Season.dayOfSeason(days);
 
-        return String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName());
+        return String.format("%s day of %s", OrdinalIndicator.addedTo(d+1), s.displayName());
     }
 
     private float getTemperature(float baseValue) {
-        float days = worldTime.getDays();
+        float days = worldTime.getDays() + TIME_SHIFT;
         float years = days / Season.YEAR_LENGTH_IN_DAYS;
         return baseValue + yearlyTemperatureModifier.apply(years);
     }
 
     private float getHumidity(float baseValue) {
-        float days = worldTime.getDays();
+        float days = worldTime.getDays() + TIME_SHIFT;
         float years = days / Season.YEAR_LENGTH_IN_DAYS;
         return TeraMath.clamp(baseValue + yearlyHumidityModifier.apply(years), 0, 1);
     }
