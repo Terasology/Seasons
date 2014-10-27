@@ -94,22 +94,25 @@ public class SeasonSystem extends BaseComponentSystem {
 
     @Override
     public void preBegin() {
-        climateConditionsSystem.addHumidityModifier(
-                Integer.MIN_VALUE,
-                new ConditionModifier() {
-                    @Override
-                    public float getCondition(float value, float x, float y, float z) {
-                        return getHumidity(value);
-                    }
-                });
-        climateConditionsSystem.addTemperatureModifier(
-                Integer.MIN_VALUE,
-                new ConditionModifier() {
-                    @Override
-                    public float getCondition(float value, float x, float y, float z) {
-                        return getTemperature(value);
-                    }
-                });
+        // These have to be registered only on authority
+        if (climateConditionsSystem != null) {
+            climateConditionsSystem.addHumidityModifier(
+                    Integer.MIN_VALUE,
+                    new ConditionModifier() {
+                        @Override
+                        public float getCondition(float value, float x, float y, float z) {
+                            return getHumidity(value);
+                        }
+                    });
+            climateConditionsSystem.addTemperatureModifier(
+                    Integer.MIN_VALUE,
+                    new ConditionModifier() {
+                        @Override
+                        public float getCondition(float value, float x, float y, float z) {
+                            return getTemperature(value);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -139,7 +142,7 @@ public class SeasonSystem extends BaseComponentSystem {
         Season s = Season.onDay(days);
         int d = Season.dayOfSeason(days);
 
-        return String.format("%s day of %s", OrdinalIndicator.addedTo(d+1), s.displayName());
+        return String.format("%s day of %s", OrdinalIndicator.addedTo(d + 1), s.displayName());
     }
 
     private float getTemperature(float baseValue) {
