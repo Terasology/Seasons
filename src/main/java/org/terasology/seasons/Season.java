@@ -30,11 +30,6 @@ public enum Season {
     WINTER("winter", 6);
 
     /**
-     * Constant that needs to be added to the world time to get the season time.
-     */
-    public static final double WORLD_TIME_OFFSET = -(WorldTime.DAY_LENGTH - WorldTimeImpl.DUSK_TIME) * WorldTimeImpl.MS_TO_DAYS;
-
-    /**
      * The amount of days of all seasons combined.
      */
     public static final int YEAR_LENGTH_IN_DAYS;

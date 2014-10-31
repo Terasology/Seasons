@@ -46,7 +46,7 @@ import org.terasology.world.time.WorldTimeImpl;
 @Share(value = SeasonSystem.class)
 public class SeasonSystem extends BaseComponentSystem {
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
-    private static final float TIME_SHIFT = WorldTimeImpl.MIDDAY_TIME * WorldTimeImpl.MS_TO_DAYS;
+    private static final float TIME_SHIFT = WorldTime.MIDDAY_TIME * WorldTime.DAY_LENGTH;
 
     @In
     private EntityManager entityManager;
