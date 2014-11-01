@@ -24,7 +24,6 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.math.TeraMath;
 import org.terasology.registry.In;
@@ -35,7 +34,6 @@ import org.terasology.world.WorldProvider;
 import org.terasology.world.time.OnMidnightEvent;
 import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
-import org.terasology.world.time.WorldTimeImpl;
 
 /**
  * Handles the passing of seasons.
@@ -46,7 +44,7 @@ import org.terasology.world.time.WorldTimeImpl;
 @Share(value = SeasonSystem.class)
 public class SeasonSystem extends BaseComponentSystem {
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
-    private static final float TIME_SHIFT = WorldTime.MIDDAY_TIME * WorldTime.DAY_LENGTH;
+    private static final float TIME_SHIFT = 0.5f * WorldTime.DAY_LENGTH;
 
     @In
     private EntityManager entityManager;

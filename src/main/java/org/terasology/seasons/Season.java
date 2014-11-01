@@ -15,9 +15,6 @@
  */
 package org.terasology.seasons;
 
-import org.terasology.world.time.WorldTime;
-import org.terasology.world.time.WorldTimeImpl;
-
 /**
  * Enumeration of the seasons.
  *
