@@ -31,7 +31,7 @@ import org.terasology.registry.Share;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
 import org.terasology.world.WorldProvider;
-import org.terasology.world.time.OnMidnightEvent;
+import org.terasology.world.sun.OnMidnightEvent;
 import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
 
