@@ -87,7 +87,9 @@ public class SeasonSystem extends BaseComponentSystem {
         worldTime = world.getTime();
         lastDay = worldTime.getDays();
         currentDay = worldTime.getDays();
-        logger.info("Initializing SeasonSystem - {} {} {}", worldTime, lastDay, currentDay);
+        if (logger.isInfoEnabled()) {
+            logger.info("Initializing SeasonSystem - {} {} {}", worldTime, lastDay, currentDay);
+        }
     }
 
     @Override
@@ -128,7 +130,9 @@ public class SeasonSystem extends BaseComponentSystem {
         Season s = Season.onDay(currentDay);
         int d = Season.dayOfSeason(currentDay);
 
-        logger.info(String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName()));
+        if (logger.isInfoEnabled()) {
+            logger.info(String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName()));
+        }
 
         if (seasonChanged()) {
             broadcastSeasonChangeEvent();
