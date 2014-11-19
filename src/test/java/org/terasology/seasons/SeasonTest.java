@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.terasology.specificationLanguage.SpecificationLanguage.*;
@@ -59,7 +61,7 @@ public class SeasonTest {
     private static final UniversalRule DISPLAY_NAMES_ARE_UNIQUE = new UniversalRule() {
         @Override
         public void test() {
-            HashSet<String> names = new HashSet<>();
+            Set<String> names = new HashSet<>();
 
             for (Season season : Season.values()) {
                 names.add(season.displayName());
@@ -204,7 +206,7 @@ public class SeasonTest {
         return new Domain<Integer>(Integer.class) {
             @Override
             public Iterable<Integer> generateUniversalSamples() {
-                ArrayList<Integer> days = new ArrayList<>();
+                List<Integer> days = new ArrayList<>();
                 for (int i = season.firstDay(); i <= season.lastDay(); i++) {
                     days.add(i);
                 }
