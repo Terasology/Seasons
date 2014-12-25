@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionModifier;
-import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -32,9 +31,8 @@ import org.terasology.registry.Share;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 import org.terasology.world.WorldComponent;
 import org.terasology.world.WorldProvider;
-import org.terasology.world.sun.CelestialModel;
-import org.terasology.world.sun.CelestialSystem;
 import org.terasology.world.sun.OnMidnightEvent;
+import org.terasology.world.time.WorldTime;
 import org.terasology.utilities.OrdinalIndicator;
 
 /**
@@ -46,6 +44,7 @@ import org.terasology.utilities.OrdinalIndicator;
 @Share(value = SeasonSystem.class)
 public class SeasonSystem extends BaseComponentSystem {
     private static final Logger logger = LoggerFactory.getLogger(SeasonSystem.class);
+    private static final float TIME_SHIFT = 0.5f * WorldTime.DAY_LENGTH;
 
     @In
     private EntityManager entityManager;
@@ -56,13 +55,7 @@ public class SeasonSystem extends BaseComponentSystem {
     @In
     private WorldProvider world;
 
-    @In
-    private Time time;
-
-    @In
-    private CelestialSystem celestialSystem;
-
-    private CelestialModel celestialModel;
+    private WorldTime worldTime;
     private double lastDay;
     private double currentDay;
 
@@ -90,15 +83,17 @@ public class SeasonSystem extends BaseComponentSystem {
             };
 
     @Override
-    public void preBegin() {
-        celestialModel = celestialSystem.getWorldCelestialModel();
-
-        lastDay = celestialModel.getDay(time.getGameTimeInMs());
-        currentDay = lastDay;
+    public void initialise() {
+        worldTime = world.getTime();
+        lastDay = worldTime.getDays();
+        currentDay = worldTime.getDays();
         if (logger.isInfoEnabled()) {
-            logger.info("Initializing SeasonSystem - {} {}", lastDay, currentDay);
+            logger.info("Initializing SeasonSystem - {} {} {}", worldTime, lastDay, currentDay);
         }
+    }
 
+    @Override
+    public void preBegin() {
         // These have to be registered only on authority
         if (climateConditionsSystem != null) {
             climateConditionsSystem.addHumidityModifier(
@@ -124,12 +119,13 @@ public class SeasonSystem extends BaseComponentSystem {
     public void shutdown() {
         lastDay = 0.0;
         currentDay = 0.0;
+        worldTime = null;
     }
 
     @ReceiveEvent(components = WorldComponent.class)
     public void onMidnight(OnMidnightEvent event, EntityRef entity) {
         lastDay = currentDay;
-        currentDay = celestialModel.getDay(time.getGameTimeInMs());
+        currentDay = worldTime.getDays();
 
         Season s = Season.onDay(currentDay);
         int d = Season.dayOfSeason(currentDay);
@@ -144,7 +140,7 @@ public class SeasonSystem extends BaseComponentSystem {
     }
 
     public String getSeasonDayDescription() {
-        float days = celestialModel.getDay(time.getGameTimeInMs());
+        float days = worldTime.getDays() + TIME_SHIFT;
         Season s = Season.onDay(days);
         int d = Season.dayOfSeason(days);
 
@@ -152,13 +148,13 @@ public class SeasonSystem extends BaseComponentSystem {
     }
 
     private float getTemperature(float baseValue) {
-        float days = celestialModel.getDay(time.getGameTimeInMs());
+        float days = worldTime.getDays() + TIME_SHIFT;
         float years = days / Season.YEAR_LENGTH_IN_DAYS;
         return baseValue + yearlyTemperatureModifier.apply(years);
     }
 
     private float getHumidity(float baseValue) {
-        float days = celestialModel.getDay(time.getGameTimeInMs());
+        float days = worldTime.getDays() + TIME_SHIFT;
         float years = days / Season.YEAR_LENGTH_IN_DAYS;
         return TeraMath.clamp(baseValue + yearlyHumidityModifier.apply(years), 0, 1);
     }
