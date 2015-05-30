@@ -1,13 +1,14 @@
 {
     "id" : "Seasons",
-    "version" : "0.9.0",
+    "version" : "0.9.1-SNAPSHOT",
     "displayName" : "Seasons",
     "author" : "DizzyDragon",
     "description" : "A library module that adds seasons to Terasology. Other modules can use to easily adjust their behaviour to the seasons.",
     "dependencies" : [
             {
                 "id" : "Core",
-                "minVersion" : "0.53.1"
+                "minVersion" : "0.53.1",
+                "maxVersion" : "0.55.0"
             },
             {
                 "id" : "ClimateConditions",
