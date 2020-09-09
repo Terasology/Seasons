@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.specificationLanguage;
 
 import java.util.Arrays;
@@ -21,8 +8,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNoException;
 
 /**
- * @author DizzyDragon
- * Simple, lightweight specification language embedded in JUnit.
+ * @author DizzyDragon Simple, lightweight specification language embedded in JUnit.
  */
 public final class SpecificationLanguage {
 
@@ -85,7 +71,8 @@ public final class SpecificationLanguage {
 
     // with quantifiers
 
-    public static <A, B, C> void testForAll(Domain<A> domainA, Domain<B> domainB, Domain<C> domainC, ThreeInstanceRule<A, B, C> rule) {
+    public static <A, B, C> void testForAll(Domain<A> domainA, Domain<B> domainB, Domain<C> domainC,
+                                            ThreeInstanceRule<A, B, C> rule) {
         for (A a : domainA.generateUniversalSamples()) {
             for (B b : domainB.generateUniversalSamples()) {
                 for (C c : domainC.generateUniversalSamples()) {
@@ -172,7 +159,7 @@ public final class SpecificationLanguage {
         }
 
         public Iterable<T> generateUniversalSamples() {
-            return Arrays.asList((T[]) underlyingClass.getEnumConstants());
+            return Arrays.asList(underlyingClass.getEnumConstants());
         }
     }
 }

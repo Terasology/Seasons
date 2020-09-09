@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.seasons;
 
 /**
@@ -31,20 +18,6 @@ public enum Season {
      */
     public static final int YEAR_LENGTH_IN_DAYS;
 
-    private final String displayName;
-    private final int lengthInDays;
-    private int firstDay;
-
-    private Season(String name, int lengthInDays) {
-        if (lengthInDays < 0) {
-            throw new IllegalArgumentException("Length of a season must be >= 0");
-        }
-
-        displayName = name;
-        this.lengthInDays = lengthInDays;
-    }
-
-
     static {
         Season[] season = values();
         season[0].firstDay = 0;
@@ -54,42 +27,23 @@ public enum Season {
         }
     }
 
-    /**
-     * The length of the season in days
-     *
-     * @return The length of the season in days
-     */
-    public int lengthInDays() {
-        return lengthInDays;
+    static {
+        Season[] seasons = values();
+        Season lastSeason = seasons[seasons.length - 1];
+        YEAR_LENGTH_IN_DAYS = lastSeason.lastDay() + 1;
     }
 
-    /**
-     * The name of the season
-     *
-     * @return The name of the season
-     */
-    public String displayName() {
-        return displayName;
-    }
+    private final String displayName;
+    private final int lengthInDays;
+    private int firstDay;
 
-    /**
-     * Returns the season that follows the season on which the function is called.
-     *
-     * @return The following season
-     */
-    public Season next() {
-        Season[] seasons = Season.values();
-        return seasons[(this.ordinal() + 1) % seasons.length];
-    }
+    Season(String name, int lengthInDays) {
+        if (lengthInDays < 0) {
+            throw new IllegalArgumentException("Length of a season must be >= 0");
+        }
 
-    /**
-     * Returns the season that precedes the season on which the function is called.
-     *
-     * @return The preceding season
-     */
-    public Season previous() {
-        Season[] seasons = Season.values();
-        return seasons[(this.ordinal() + seasons.length - 1) % seasons.length];
+        displayName = name;
+        this.lengthInDays = lengthInDays;
     }
 
     /**
@@ -162,6 +116,44 @@ public enum Season {
     }
 
     /**
+     * The length of the season in days
+     *
+     * @return The length of the season in days
+     */
+    public int lengthInDays() {
+        return lengthInDays;
+    }
+
+    /**
+     * The name of the season
+     *
+     * @return The name of the season
+     */
+    public String displayName() {
+        return displayName;
+    }
+
+    /**
+     * Returns the season that follows the season on which the function is called.
+     *
+     * @return The following season
+     */
+    public Season next() {
+        Season[] seasons = Season.values();
+        return seasons[(this.ordinal() + 1) % seasons.length];
+    }
+
+    /**
+     * Returns the season that precedes the season on which the function is called.
+     *
+     * @return The preceding season
+     */
+    public Season previous() {
+        Season[] seasons = Season.values();
+        return seasons[(this.ordinal() + seasons.length - 1) % seasons.length];
+    }
+
+    /**
      * Returns the day of the cycle that marks the first day of the season.
      *
      * @return The day of the cycle that marks the first day of the season.
@@ -177,12 +169,6 @@ public enum Season {
      */
     public int lastDay() {
         return firstDay + lengthInDays - 1;
-    }
-
-    static {
-        Season[] seasons = values();
-        Season lastSeason = seasons[seasons.length - 1];
-        YEAR_LENGTH_IN_DAYS = lastSeason.lastDay() + 1;
     }
 
 }

@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.seasons;
 
 import org.junit.Test;
@@ -25,8 +12,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.terasology.specificationLanguage.SpecificationLanguage.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.terasology.specificationLanguage.SpecificationLanguage.Domain;
+import static org.terasology.specificationLanguage.SpecificationLanguage.EnumDomain;
+import static org.terasology.specificationLanguage.SpecificationLanguage.InfixRelationRule;
+import static org.terasology.specificationLanguage.SpecificationLanguage.InstanceRule;
+import static org.terasology.specificationLanguage.SpecificationLanguage.TwoInstanceRule;
+import static org.terasology.specificationLanguage.SpecificationLanguage.UniversalRule;
+import static org.terasology.specificationLanguage.SpecificationLanguage.assuming;
+import static org.terasology.specificationLanguage.SpecificationLanguage.assumingForAll;
+import static org.terasology.specificationLanguage.SpecificationLanguage.test;
+import static org.terasology.specificationLanguage.SpecificationLanguage.testForAll;
 
 /**
  * Test of Season
@@ -95,17 +93,32 @@ public class SeasonTest {
             );
         }
     };
+    private static final InfixRelationRule IS_FOLLOWED_BY = new InfixRelationRule<Season, Season>() {
+        @Override
+        public void test(Season leftOperand, Season rightOperand) {
+            assertSame(
+                    String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString()),
+                    leftOperand.next(), rightOperand
+            );
+
+            assertSame(
+                    String.format("%s is preceded by %s", rightOperand.toString(), leftOperand.toString()),
+                    rightOperand.previous(), leftOperand
+            );
+        }
+    };
+    private static final Random random = new Random(768179104);
     private static final TwoInstanceRule DAY_OF_CYCLE_IS_INDEPENDENT_OF_YEAR = new TwoInstanceRule<Integer, Integer>() {
         @Override
         public void test(Integer day, Integer year) {
             int absoluteDay = day + year * Season.YEAR_LENGTH_IN_DAYS;
-            int expected = ((absoluteDay % Season.YEAR_LENGTH_IN_DAYS) + Season.YEAR_LENGTH_IN_DAYS) % Season.YEAR_LENGTH_IN_DAYS;
+            int expected =
+                    ((absoluteDay % Season.YEAR_LENGTH_IN_DAYS) + Season.YEAR_LENGTH_IN_DAYS) % Season.YEAR_LENGTH_IN_DAYS;
             double absoluteDayD = absoluteDay + random.nextDouble();
             assertEquals("Day of year", expected, Season.dayOfCycle(absoluteDay));
             assertEquals("Day of year", expected, Season.dayOfYear(absoluteDayD));
         }
     };
-
     // test cases ////////////////////////////////////////////////////////////
     private static final TwoInstanceRule DAY_TO_SEASON_IS_CONSISTENT = new TwoInstanceRule<Season, Integer>() {
         @Override
@@ -118,7 +131,8 @@ public class SeasonTest {
                     int absoluteDayI = firstDayOfYear + dayOfSeason;
                     double offset = random.nextDouble();
 
-                    String message = String.format("%s on day %d (+%f) of year %d (abs. %d)", season.toString(), dayOfSeason, offset, year, absoluteDayI);
+                    String message = String.format("%s on day %d (+%f) of year %d (abs. %d)", season.toString(),
+                            dayOfSeason, offset, year, absoluteDayI);
                     assertSame(message + " (int)", season, Season.onDay(absoluteDayI));
                     assertSame(message + " (double)", season, Season.onDay(absoluteDayI + offset));
                 }
@@ -144,23 +158,8 @@ public class SeasonTest {
             });
         }
     };
-    private static final InfixRelationRule IS_FOLLOWED_BY = new InfixRelationRule<Season, Season>() {
-        @Override
-        public void test(Season leftOperand, Season rightOperand) {
-            assertSame(
-                    String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString()),
-                    leftOperand.next(), rightOperand
-            );
-
-            assertSame(
-                    String.format("%s is preceded by %s", rightOperand.toString(), leftOperand.toString()),
-                    rightOperand.previous(), leftOperand
-            );
-        }
-    };
-    private static Random random = new Random(768179104);
-    private static EnumDomain seasons = new EnumDomain<>(Season.class);
-    private static Domain integers = new Domain<Integer>(Integer.class) {
+    private static final EnumDomain seasons = new EnumDomain<>(Season.class);
+    private static final Domain integers = new Domain<Integer>(Integer.class) {
         @Override
         public Iterable<Integer> generateUniversalSamples() {
             Integer[] a = {0, 1, -1, random.nextInt(90000) + 10000, -(random.nextInt(90000)) - 10000};
@@ -171,8 +170,8 @@ public class SeasonTest {
 
     /////////////////////////////////////////////////////////////////
     // specification rule definitions
-    private static Domain years = integers;
-    private static Domain daysInYear = new Domain<Integer>(Integer.class) {
+    private static final Domain years = integers;
+    private static final Domain daysInYear = new Domain<Integer>(Integer.class) {
         @Override
         public Iterable<Integer> generateUniversalSamples() {
             return new Iterable<Integer>() {
