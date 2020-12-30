@@ -1,11 +1,14 @@
 {
-    "id": "Seasons",
-    "version": "1.0.0",
-    "displayName": "Seasons",
-    "author": "LinusVanElswijk",
-    "description": "A library module that adds seasons to Terasology. Other modules can use to easily adjust their behaviour to the seasons.",
-    "dependencies": [
-        { "id": "ClimateConditions", "minVersion": "1.0.0" }
-    ],
-    "isLibrary": true
+  "id": "Seasons",
+  "version": "1.1.0-SNAPSHOT",
+  "displayName": "Seasons",
+  "author": "LinusVanElswijk",
+  "description": "A library module that adds seasons to Terasology. Other modules can use to easily adjust their behaviour to the seasons.",
+  "dependencies": [
+    {
+      "id": "ClimateConditions",
+      "minVersion": "1.0.0"
+    }
+  ],
+  "isLibrary": true
 }
