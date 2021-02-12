@@ -15,7 +15,9 @@
  */
 package org.terasology.seasons;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.terasology.specificationLanguage.SpecificationLanguage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +27,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.terasology.specificationLanguage.SpecificationLanguage.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.terasology.specificationLanguage.SpecificationLanguage.assuming;
+import static org.terasology.specificationLanguage.SpecificationLanguage.assumingForAll;
+import static org.terasology.specificationLanguage.SpecificationLanguage.test;
+import static org.terasology.specificationLanguage.SpecificationLanguage.testForAll;
 
 /**
  * Test of Season
@@ -34,16 +41,15 @@ import static org.terasology.specificationLanguage.SpecificationLanguage.*;
  * @author DizzyDragon
  */
 public class SeasonTest {
-    private static final UniversalRule THERE_ARE_EXACTLY_4_SEASONS = new UniversalRule() {
+    private static final SpecificationLanguage.UniversalRule THERE_ARE_EXACTLY_4_SEASONS = new SpecificationLanguage.UniversalRule() {
         @Override
         public void test() {
-            assertEquals("Number of seasons", 4, Season.values().length
-            );
+            assertEquals(4, Season.values().length, "Number of seasons");
         }
     };
 
     // domains ///////////////////////////////////////////////////////////////
-    private static final UniversalRule DAYS_IN_A_YEAR_IS_THE_SUM_OF_THE_DAYS_OF_ALL_SEASONS = new UniversalRule() {
+    private static final SpecificationLanguage.UniversalRule DAYS_IN_A_YEAR_IS_THE_SUM_OF_THE_DAYS_OF_ALL_SEASONS = new SpecificationLanguage.UniversalRule() {
         @Override
         public void test() {
             int dayCount = 0;
@@ -52,13 +58,14 @@ public class SeasonTest {
                 dayCount += season.lengthInDays();
             }
 
-            assertEquals("Year length in days",
+            assertEquals(
                     dayCount,
-                    Season.YEAR_LENGTH_IN_DAYS
+                    Season.YEAR_LENGTH_IN_DAYS,
+                    "Year length in days"
             );
         }
     };
-    private static final UniversalRule DISPLAY_NAMES_ARE_UNIQUE = new UniversalRule() {
+    private static final SpecificationLanguage.UniversalRule DISPLAY_NAMES_ARE_UNIQUE = new SpecificationLanguage.UniversalRule() {
         @Override
         public void test() {
             Set<String> names = new HashSet<>();
@@ -67,70 +74,61 @@ public class SeasonTest {
                 names.add(season.displayName());
             }
 
-            assertEquals("Number of unique names", names.size(), Season.values().length);
+            assertEquals(names.size(), Season.values().length, "Number of unique names");
         }
     };
-    private static final InstanceRule LENGTH_IS_CONSISTENT_WITH_FIRST_AND_LAST_DAY = new InstanceRule<Season>() {
+    private static final SpecificationLanguage.InstanceRule LENGTH_IS_CONSISTENT_WITH_FIRST_AND_LAST_DAY = new SpecificationLanguage.InstanceRule<Season>() {
         @Override
         public void test(Season season) {
             int computedLength = Math.abs(season.lastDay() - season.firstDay()) + 1;
 
-            assertEquals(
-                    String.format("%s length in days", season.toString()),
-                    season.lengthInDays(), computedLength
-            );
+            assertEquals(season.lengthInDays(), computedLength, String.format("%s length in days", season.toString()));
         }
     };
-    private static final InstanceRule FIRST_AND_LAST_DAY_NUMBER_ARE_POSITIVE = new InstanceRule<Season>() {
+    private static final SpecificationLanguage.InstanceRule FIRST_AND_LAST_DAY_NUMBER_ARE_POSITIVE = new SpecificationLanguage.InstanceRule<Season>() {
         @Override
         public void test(Season season) {
-            assertTrue(
-                    String.format("First day of %s is positive number", season.toString()),
-                    season.firstDay() >= 0
-            );
-
-            assertTrue(
-                    String.format("Last day of %s is positive number", season.toString()),
-                    season.lastDay() >= 0
-            );
+            assertTrue(season.firstDay() >= 0, String.format("First day of %s is positive number", season.toString()));
+            assertTrue(season.lastDay() >= 0, String.format("Last day of %s is positive number", season.toString()));
         }
     };
-    private static final TwoInstanceRule DAY_OF_CYCLE_IS_INDEPENDENT_OF_YEAR = new TwoInstanceRule<Integer, Integer>() {
+    private static final SpecificationLanguage.TwoInstanceRule DAY_OF_CYCLE_IS_INDEPENDENT_OF_YEAR = new SpecificationLanguage.TwoInstanceRule<Integer, Integer>() {
         @Override
         public void test(Integer day, Integer year) {
             int absoluteDay = day + year * Season.YEAR_LENGTH_IN_DAYS;
             int expected = ((absoluteDay % Season.YEAR_LENGTH_IN_DAYS) + Season.YEAR_LENGTH_IN_DAYS) % Season.YEAR_LENGTH_IN_DAYS;
             double absoluteDayD = absoluteDay + random.nextDouble();
-            assertEquals("Day of year", expected, Season.dayOfCycle(absoluteDay));
-            assertEquals("Day of year", expected, Season.dayOfYear(absoluteDayD));
+            assertEquals(expected, Season.dayOfCycle(absoluteDay),"Day of year");
+            assertEquals(expected, Season.dayOfYear(absoluteDayD),"Day of year");
         }
     };
 
     // test cases ////////////////////////////////////////////////////////////
-    private static final TwoInstanceRule DAY_TO_SEASON_IS_CONSISTENT = new TwoInstanceRule<Season, Integer>() {
+    private static final SpecificationLanguage.TwoInstanceRule DAY_TO_SEASON_IS_CONSISTENT = new SpecificationLanguage.TwoInstanceRule<Season, Integer>() {
         @Override
         public void test(final Season season, final Integer year) {
             final int firstDayOfYear = year * (Season.YEAR_LENGTH_IN_DAYS);
 
-            testForAll(daysIn(season), new InstanceRule<Integer>() {
+            testForAll(daysIn(season), new SpecificationLanguage.InstanceRule<Integer>() {
                 @Override
                 public void test(Integer dayOfSeason) {
                     int absoluteDayI = firstDayOfYear + dayOfSeason;
                     double offset = random.nextDouble();
 
                     String message = String.format("%s on day %d (+%f) of year %d (abs. %d)", season.toString(), dayOfSeason, offset, year, absoluteDayI);
-                    assertSame(message + " (int)", season, Season.onDay(absoluteDayI));
-                    assertSame(message + " (double)", season, Season.onDay(absoluteDayI + offset));
+
+                    assertSame(season, Season.onDay(absoluteDayI), message + " (int)");
+                    assertSame(season, Season.onDay(absoluteDayI + offset),message + " (double)");
                 }
             });
         }
     };
-    private static final TwoInstanceRule DAY_OF_SEASON_IS_CONSISTENT = new TwoInstanceRule<Season, Integer>() {
+    private static final SpecificationLanguage.TwoInstanceRule DAY_OF_SEASON_IS_CONSISTENT = new SpecificationLanguage.TwoInstanceRule<Season, Integer>() {
         @Override
         public void test(final Season season, final Integer year) {
             final int firstDayOfYear = year * Season.YEAR_LENGTH_IN_DAYS;
 
-            testForAll(daysIn(season), new InstanceRule<Integer>() {
+            testForAll(daysIn(season), new SpecificationLanguage.InstanceRule<Integer>() {
                 @Override
                 public void test(Integer dayOfYear) {
                     int absoluteDayInt = dayOfYear + firstDayOfYear;
@@ -138,29 +136,27 @@ public class SeasonTest {
                     double absoluteDayDouble = absoluteDayInt + random.nextDouble(); // 0 <= random.nextDouble() < 1.0
 
                     String message = String.format("day %d of %s (year %d)", dayOfYear, season, year);
-                    assertEquals(message, dayOfSeason, Season.dayOfSeason(absoluteDayInt));
-                    assertEquals(message, dayOfSeason, Season.dayOfSeason(absoluteDayDouble));
+                    assertEquals(dayOfSeason, Season.dayOfSeason(absoluteDayInt), message);
+                    assertEquals(dayOfSeason, Season.dayOfSeason(absoluteDayDouble), message);
                 }
             });
         }
     };
-    private static final InfixRelationRule IS_FOLLOWED_BY = new InfixRelationRule<Season, Season>() {
+    private static final SpecificationLanguage.InfixRelationRule IS_FOLLOWED_BY = new SpecificationLanguage.InfixRelationRule<Season, Season>() {
         @Override
         public void test(Season leftOperand, Season rightOperand) {
-            assertSame(
-                    String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString()),
-                    leftOperand.next(), rightOperand
+            assertSame(leftOperand.next(), rightOperand,
+                    String.format("%s is followed by %s", leftOperand.toString(), rightOperand.toString())
             );
 
-            assertSame(
-                    String.format("%s is preceded by %s", rightOperand.toString(), leftOperand.toString()),
-                    rightOperand.previous(), leftOperand
+            assertSame(rightOperand.previous(), leftOperand,
+                    String.format("%s is preceded by %s", rightOperand.toString(), leftOperand.toString())
             );
         }
     };
     private static Random random = new Random(768179104);
-    private static EnumDomain seasons = new EnumDomain<>(Season.class);
-    private static Domain integers = new Domain<Integer>(Integer.class) {
+    private static SpecificationLanguage.EnumDomain seasons = new SpecificationLanguage.EnumDomain<>(Season.class);
+    private static SpecificationLanguage.Domain integers = new SpecificationLanguage.Domain<Integer>(Integer.class) {
         @Override
         public Iterable<Integer> generateUniversalSamples() {
             Integer[] a = {0, 1, -1, random.nextInt(90000) + 10000, -(random.nextInt(90000)) - 10000};
@@ -171,8 +167,8 @@ public class SeasonTest {
 
     /////////////////////////////////////////////////////////////////
     // specification rule definitions
-    private static Domain years = integers;
-    private static Domain daysInYear = new Domain<Integer>(Integer.class) {
+    private static SpecificationLanguage.Domain years = integers;
+    private static SpecificationLanguage.Domain daysInYear = new SpecificationLanguage.Domain<Integer>(Integer.class) {
         @Override
         public Iterable<Integer> generateUniversalSamples() {
             return new Iterable<Integer>() {
@@ -202,8 +198,8 @@ public class SeasonTest {
         }
     };
 
-    private static Domain<Integer> daysIn(final Season season) {
-        return new Domain<Integer>(Integer.class) {
+    private static SpecificationLanguage.Domain<Integer> daysIn(final Season season) {
+        return new SpecificationLanguage.Domain<Integer>(Integer.class) {
             @Override
             public Iterable<Integer> generateUniversalSamples() {
                 List<Integer> days = new ArrayList<>();
