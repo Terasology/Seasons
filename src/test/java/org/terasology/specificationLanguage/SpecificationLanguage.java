@@ -17,8 +17,8 @@ package org.terasology.specificationLanguage;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeNoException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author DizzyDragon
@@ -46,27 +46,21 @@ public final class SpecificationLanguage {
     }
 
     public static void assuming(UniversalRule rule) {
-        try {
+        assertDoesNotThrow(() -> {
             test(rule);
-        } catch (AssertionError e) {
-            assumeNoException(e);
-        }
+        });
     }
 
     public static <T> void assuming(T instance, InstanceRule<T> rule) {
-        try {
+        assertDoesNotThrow(() -> {
             test(instance, rule);
-        } catch (AssertionError e) {
-            assumeNoException(e);
-        }
+        });
     }
 
     public static <A, B> void assuming(A leftOperand, InfixRelationRule<A, B> rule, B rightOperand) {
-        try {
+        assertDoesNotThrow(() -> {
             test(leftOperand, rule, rightOperand);
-        } catch (AssertionError e) {
-            assumeNoException(e);
-        }
+        });
     }
 
     public static <T> void testForAll(Domain<T> domain, InstanceRule<T> rule) {
@@ -112,19 +106,15 @@ public final class SpecificationLanguage {
     }
 
     public static <T> void assumingForAll(Domain<T> domain, InstanceRule<T> rule) {
-        try {
+        assertDoesNotThrow(() -> {
             testForAll(domain, rule);
-        } catch (AssertionError e) {
-            assumeNoException(e);
-        }
+        });
     }
 
     public static <T extends Enum<T>> void assumingExists(EnumDomain<T> domain, InstanceRule<T> rule) {
-        try {
+        assertDoesNotThrow(() -> {
             testExists(domain, rule);
-        } catch (AssertionError e) {
-            assumeNoException(e);
-        }
+        });
     }
 
     // rule without arguments
