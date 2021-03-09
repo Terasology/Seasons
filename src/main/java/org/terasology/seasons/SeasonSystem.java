@@ -20,20 +20,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionModifier;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
+import org.terasology.engine.utilities.OrdinalIndicator;
+import org.terasology.engine.world.WorldComponent;
+import org.terasology.engine.world.WorldProvider;
+import org.terasology.engine.world.sun.OnMidnightEvent;
+import org.terasology.engine.world.time.WorldTime;
 import org.terasology.math.TeraMath;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
-import org.terasology.world.WorldComponent;
-import org.terasology.world.WorldProvider;
-import org.terasology.world.sun.OnMidnightEvent;
-import org.terasology.world.time.WorldTime;
-import org.terasology.utilities.OrdinalIndicator;
 
 /**
  * Handles the passing of seasons.
