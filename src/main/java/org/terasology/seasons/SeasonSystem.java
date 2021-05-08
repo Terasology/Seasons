@@ -27,7 +27,7 @@ import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
-import org.terasology.engine.utilities.OrdinalIndicator;
+import org.terasology.engine.utilities.StringUtility;
 import org.terasology.engine.world.WorldComponent;
 import org.terasology.engine.world.WorldProvider;
 import org.terasology.engine.world.sun.OnMidnightEvent;
@@ -131,7 +131,7 @@ public class SeasonSystem extends BaseComponentSystem {
         int d = Season.dayOfSeason(currentDay);
 
         if (logger.isInfoEnabled()) {
-            logger.info(String.format("%s day of %s", OrdinalIndicator.addedTo(d), s.displayName()));
+            logger.info(String.format("%s day of %s", StringUtility.toOrdinalString(d), s.displayName()));
         }
 
         if (seasonChanged()) {
@@ -144,7 +144,7 @@ public class SeasonSystem extends BaseComponentSystem {
         Season s = Season.onDay(days);
         int d = Season.dayOfSeason(days);
 
-        return String.format("%s day of %s", OrdinalIndicator.addedTo(d + 1), s.displayName());
+        return String.format("%s day of %s", StringUtility.toOrdinalString(d + 1), s.displayName());
     }
 
     private float getTemperature(float baseValue) {
