@@ -22,7 +22,6 @@ import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionModifier;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.registry.In;
@@ -32,6 +31,7 @@ import org.terasology.engine.world.WorldComponent;
 import org.terasology.engine.world.WorldProvider;
 import org.terasology.engine.world.sun.OnMidnightEvent;
 import org.terasology.engine.world.time.WorldTime;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.math.TeraMath;
 import org.terasology.seasons.events.OnSeasonChangeEvent;
 
